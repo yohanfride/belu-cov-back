@@ -1,0 +1,36 @@
+{
+  "name": "backend-covid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^3.2.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-myconnection": "^1.0.4",
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "leaflet": "^1.6.0",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.28",
+    "mongodb": "^3.5.6",
+    "mongoose": "^5.9.10",
+    "mongoose-auto-increment": "^5.0.1",
+    "mongoose-float": "^1.0.4",
+    "mongoose-geojson-schema": "^2.1.5",
+    "mongoose-unique-validator": "^2.0.3",
+    "mongose": "0.0.2-security",
+    "mqtt": "^3.0.0",
+    "node-schedule": "^1.3.2",
+    "nodemailer": "^6.4.6",
+    "path": "^0.12.7",
+    "pug": "^2.0.4",
+    "qr-image": "^3.2.0"
+  }
+}

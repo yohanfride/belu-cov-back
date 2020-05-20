@@ -1,0 +1,6 @@
+{
+	"confirm": ["Dirawat", "Pengawasan" ,"Sembuh", "Meninggal"],
+	"pdp": ["Dirawat", "Sembuh", "Meninggal"],
+	"odp": ["Dipantau", "Selesai dipantau", "Meninggal"],
+	"odr": ["Dipantau", "Selesai dipantau"]
+}
