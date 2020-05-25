@@ -164,9 +164,10 @@ app.post('/homeslide/count/',homeslide.search_count);
 //app.use(app.router);
 http.createServer(app).listen(app.get('port'), function(){
   	console.log('Express server listening on port ' + app.get('port'));
-  	cron.scheduleJob('49 19 * * 0-7', function(){	
+  	cron.scheduleJob('00 13 * * 0-7', function(){	
 	//cron.scheduleJob('57 10 * * 1-7', function(){	
-		console.log(new Date(), "Cron Job - Delete Log Refnum Started !.");					
+		console.log(new Date(), "Cron Job - Auto Recap !.");					
 		daily.new();
 	});
 });
+
