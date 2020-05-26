@@ -122,6 +122,8 @@ app.get('/daily/detail/:id',daily.daily_detail);
 app.post('/daily/search/',daily.search);
 app.post('/daily/count/',daily.search_count);
 app.post('/daily/today/',daily.get_recap_today);
+app.post('/daily/manual/',daily.manual_insert);
+
 
 ///Rumah Isolasi
 app.get('/rumahisolasi/',rumahisolasi.rumahisolasi);

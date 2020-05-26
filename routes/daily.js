@@ -435,3 +435,154 @@ exports.new = function(){
 		}
 	});	
 };
+
+
+//Daily Get by Dailyname
+exports.manual_insert = function(req, res){
+	var response = Config.base_response;
+	
+	var facet = {}; 
+	var project = {};
+	var listitem = {};
+	for (var key in covid) {
+      	facet[key] = [
+      		{"$match":{"level":key}},
+	    	{"$count":key}
+      	];
+      	project[key] = { "$arrayElemAt":["$"+key+"."+key,0] };
+      	listitem[key] = {};
+      	listitem[key]['total'] = key;
+      	var covid_status = covid[key];
+      	for (var index in covid_status) {
+      		var key_status = covid_status[index];
+      		var key_item = key+"-"+key_status;
+      		key_item = key_item.replace(" ","-").toLowerCase();
+      		facet[key_item] = [
+	      		{"$match":{"level":key, "level_status":key_status}},
+		    	{"$count":key_item}
+	      	];
+	      	project[key_item] = { "$arrayElemAt":["$"+key_item+"."+key_item,0] };
+	      	key_status = key_status.replace(" ","-").toLowerCase();
+	      	listitem[key][key_status] = key_item;
+      	}
+    }
+    var list_kecamatan = kecamatan["Kecamatan"];
+    listitem['kecamatan'] = {};
+    for (var index in list_kecamatan) {
+		var key_status = list_kecamatan[index];
+		key_item = "kecamatan-"+key_status.replace(" ","-").toLowerCase();
+		facet[key_item] = [
+      		{"$match":{"kecamatan":key_status}},
+	    	{"$count":key_item}
+      	];
+      	project[key_item] = { "$arrayElemAt":["$"+key_item+"."+key_item,0] };
+      	listitem['kecamatan'][key_status] = {};
+      	listitem['kecamatan'][key_status]['total'] = key_item;
+      	for (var key in covid) {
+      		var key_item2 = key_item+"-"+key;
+      		facet[key_item2] = [
+	      		{"$match":{"level":key, "kecamatan":key_status}},
+		    	{"$count":key_item2}
+	      	];
+	      	project[key_item2] = { "$arrayElemAt":["$"+key_item2+"."+key_item2,0] };
+      		listitem['kecamatan'][key_status][key] = key_item2;
+			var covid_status = covid[key];
+      		for (var key2 in covid_status) {
+	      		var key_status3 = covid_status[key2];
+	      		var key_item3 = key_item2+"-"+key_status3;
+	      		key_item3 = key_item3.replace(" ","-").toLowerCase();
+	      		facet[key_item3] = [
+		      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status}},
+			    	{"$count":key_item3}
+		      	];
+		      	project[key_item3] = { "$arrayElemAt":["$"+key_item3+"."+key_item3,0] };
+		      	key_status3 = key_status3.replace(" ","-").toLowerCase();
+		      	listitem['kecamatan'][key_status][key+'-'+key_status3] = key_item3;
+	      	}
+
+      	}
+	}
+    var query = [
+    	{"$facet":facet},
+    	{"$project":project}
+    ];
+	User.multiCount(query,function(err, result){
+		if(!result){
+			console.log('daily: detail err:', err);
+			response.is_success = false;
+			response.description = 'Failed';
+			response.data = err;			
+		} else {
+			var datenow = new Date(); 
+			var datenow_string = datenow.getFullYear()+"-"+(datenow.getMonth() + 1)+"-"+datenow.getDate(); 
+			var data = result[0];
+			for(var key in listitem){
+				if (typeof listitem[key] === 'string') {
+					var index = listitem[key];
+					if( data.hasOwnProperty(index) )
+						listitem[key] = data[index];
+					else 
+						listitem[key] = 0;
+				} else {
+					for(var key2 in listitem[key]){
+						if (typeof listitem[key][key2] === 'string') {
+							var index = listitem[key][key2];
+							if( data.hasOwnProperty(index) )
+								listitem[key][key2] = data[index];
+							else 
+								listitem[key][key2] = 0;
+						} else {
+							for(var key3 in listitem[key][key2]){
+								if (typeof listitem[key][key2][key3] === 'string') {
+									var index = listitem[key][key2][key3];
+									if( data.hasOwnProperty(index) )
+										listitem[key][key2][key3] = data[index];
+									else 
+										listitem[key][key2][key3] = 0;
+								} 
+							}	
+						}
+					}
+				}
+			}
+			listitem['date_only'] = datenow_string;
+			query = listitem;
+			Daily.get({ date_only:listitem.date_only },function(err, result){
+				if(!result){
+					Daily.create(query, function(err, result){
+						var respon = Config.base_response;		
+						if(err){
+							console.log('daily: add err:', err);
+							respon.is_success = false;
+							respon.description = 'Failed';
+							respon.data = err;
+						} else {
+							console.log('daily: add succ:');
+							respon.is_success = true;
+							respon.description = 'success';
+							respon.data = 'success';			
+						}
+						res.json(respon);		
+					});		
+				} else {
+					var data = result;
+					Daily.updateById({_id:data._id},query, function(err, result){
+						var respon = Config.base_response;
+						if(err){
+							console.log('daily: edit err:', err);
+							respon.is_success = false;
+							respon.description = 'Failed';
+							respon.data = err;
+						} else {
+							console.log('daily: edit succ:');
+							respon.is_success = true;
+							respon.description = 'success';
+							respon.data = 'success';
+						}
+						res.json(respon);		
+					});		
+				}			
+			});
+		}
+	});	
+};
