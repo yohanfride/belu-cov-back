@@ -10,6 +10,9 @@ module.exports = {
         //url: 'mongodb:/127.0.0.1:27017/semar'
         url:'mongodb://localhost/cov-sampang'
     },
+    token:{
+        secret:'47287e41e0cb0d376e5b5b392581acaf66b8f7aa82dd513137d2e15b856b82cfbe5701ccc6fe275ac24c53a157ae6b331a8dde34198c76c50d4c40d65b99e91f'
+    },
     mqtt:{ 
         host: 'localhost', 
         port: 4001 
@@ -40,5 +43,5 @@ module.exports = {
     },
     errors:{
         unauthorized: "You are not unauthorized"
-    }
+    },
 };

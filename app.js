@@ -4,11 +4,14 @@
  */
 const Config = require('./config/config');
 process.env.PORT = Config.server.port;
+process.env.ACCESS_TOKEN_SECRET = Config.token.secret;
 var express = require('express');
 var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var bodyParser = require('body-parser');
+var helmet = require('helmet');
+var jwt = require("jsonwebtoken");
 
 //load user route
 var user = require('./routes/user');
@@ -28,22 +31,34 @@ var cron = require('node-schedule');
 
 var app = express();
 app.set('port', process.env.PORT || 3000);
+
 //app.use(express.logger('dev'));
 //app.use(express.json());
 //app.use(express.urlencoded());
 //app.use(express.methodOverride());
+app.use(helmet());
 
 app.use(express.static(path.join(__dirname, '/public')));
-
-
-app.use(express.static(path.join(__dirname, '/public')));
-
 app.use('/qr', express.static( path.join(__dirname, '/public/qr') ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.get('/', routes.index);
 
+function authenticateToken(req, res, next) {
+  // Gather the jwt access token from the request header
+	const authHeader = req.headers['authorization']
+	const token = authHeader && authHeader.split(' ')[1]
+	if (token == null) return res.sendStatus(401) // if there isn't any token
+	if(token == Config.token.secret){
+		next();
+	} else {
+		console.log("Erro Access");
+		console.log(token);
+		return res.sendStatus(403)
+	}
+}
+
+app.use(authenticateToken);
 ///User
 app.get('/user/',user.user);
 app.post('/user/',user.save);
