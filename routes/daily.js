@@ -175,7 +175,7 @@ exports.get_recap_today = function(req, res){
 	var listitem = {};
 	for (var key in covid) {
       	facet[key] = [
-      		{"$match":{"level":key}},
+      		{"$match":{"level":key,"status_pantau":1}},
 	    	{"$count":key}
       	];
       	project[key] = { "$arrayElemAt":["$"+key+"."+key,0] };
@@ -187,7 +187,7 @@ exports.get_recap_today = function(req, res){
       		var key_item = key+"-"+key_status;
       		key_item = key_item.replace(" ","-").toLowerCase();
       		facet[key_item] = [
-	      		{"$match":{"level":key, "level_status":key_status}},
+	      		{"$match":{"level":key, "level_status":key_status,"status_pantau":1}},
 		    	{"$count":key_item}
 	      	];
 	      	project[key_item] = { "$arrayElemAt":["$"+key_item+"."+key_item,0] };
@@ -201,7 +201,7 @@ exports.get_recap_today = function(req, res){
 		var key_status = list_kecamatan[index];
 		key_item = "kecamatan-"+key_status.replace(" ","-").toLowerCase();
 		facet[key_item] = [
-      		{"$match":{"kecamatan":key_status}},
+      		{"$match":{"kecamatan":key_status,"status_pantau":1}},
 	    	{"$count":key_item}
       	];
       	project[key_item] = { "$arrayElemAt":["$"+key_item+"."+key_item,0] };
@@ -210,7 +210,7 @@ exports.get_recap_today = function(req, res){
       	for (var key in covid) {
       		var key_item2 = key_item+"-"+key;
       		facet[key_item2] = [
-	      		{"$match":{"level":key, "kecamatan":key_status}},
+	      		{"$match":{"level":key, "kecamatan":key_status,"status_pantau":1}},
 		    	{"$count":key_item2}
 	      	];
 	      	project[key_item2] = { "$arrayElemAt":["$"+key_item2+"."+key_item2,0] };
@@ -221,7 +221,7 @@ exports.get_recap_today = function(req, res){
 	      		var key_item3 = key_item2+"-"+key_status3;
 	      		key_item3 = key_item3.replace(" ","-").toLowerCase();
 	      		facet[key_item3] = [
-		      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status}},
+		      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status,"status_pantau":1}},
 			    	{"$count":key_item3}
 		      	];
 		      	project[key_item3] = { "$arrayElemAt":["$"+key_item3+"."+key_item3,0] };
@@ -295,7 +295,7 @@ exports.new = function(){
 	var listitem = {};
 	for (var key in covid) {
       	facet[key] = [
-      		{"$match":{"level":key}},
+      		{"$match":{"level":key,"status_pantau":1}},
 	    	{"$count":key}
       	];
       	project[key] = { "$arrayElemAt":["$"+key+"."+key,0] };
@@ -307,7 +307,7 @@ exports.new = function(){
       		var key_item = key+"-"+key_status;
       		key_item = key_item.replace(" ","-").toLowerCase();
       		facet[key_item] = [
-	      		{"$match":{"level":key, "level_status":key_status}},
+	      		{"$match":{"level":key, "level_status":key_status,"status_pantau":1}},
 		    	{"$count":key_item}
 	      	];
 	      	project[key_item] = { "$arrayElemAt":["$"+key_item+"."+key_item,0] };
@@ -321,7 +321,7 @@ exports.new = function(){
 		var key_status = list_kecamatan[index];
 		key_item = "kecamatan-"+key_status.replace(" ","-").toLowerCase();
 		facet[key_item] = [
-      		{"$match":{"kecamatan":key_status}},
+      		{"$match":{"kecamatan":key_status,"status_pantau":1}},
 	    	{"$count":key_item}
       	];
       	project[key_item] = { "$arrayElemAt":["$"+key_item+"."+key_item,0] };
@@ -330,7 +330,7 @@ exports.new = function(){
       	for (var key in covid) {
       		var key_item2 = key_item+"-"+key;
       		facet[key_item2] = [
-	      		{"$match":{"level":key, "kecamatan":key_status}},
+	      		{"$match":{"level":key, "kecamatan":key_status,"status_pantau":1}},
 		    	{"$count":key_item2}
 	      	];
 	      	project[key_item2] = { "$arrayElemAt":["$"+key_item2+"."+key_item2,0] };
@@ -341,7 +341,7 @@ exports.new = function(){
 	      		var key_item3 = key_item2+"-"+key_status3;
 	      		key_item3 = key_item3.replace(" ","-").toLowerCase();
 	      		facet[key_item3] = [
-		      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status}},
+		      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status,"status_pantau":1}},
 			    	{"$count":key_item3}
 		      	];
 		      	project[key_item3] = { "$arrayElemAt":["$"+key_item3+"."+key_item3,0] };

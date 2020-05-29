@@ -26,6 +26,9 @@ var User = new Schema({
     tgl_lahir: {
         type: Date
     },
+    umur:{
+        type:String
+    },
     jenis_kelamin:String,
     kecamatan:String,
     kelurahan:String,
@@ -50,14 +53,13 @@ var User = new Schema({
         type: Date,
         default: new Date()
     },
+    date_end: {
+        type: Date
+    },
     lokasi: {
        type: { type: String },
        coordinates: [Number]
-    },//pointSchema,
-    // lokasi_rumah: {
-    //    type: { type: String },
-    //    coordinates: []
-    // },//pointSchema,
+    },
     add_by: {
         _id:false,
         type: String
@@ -65,6 +67,17 @@ var User = new Schema({
     date_updated: {
         type: Date,
         default: new Date()
+    },
+    status_pantau:{
+        type:Number,
+        default:1
+    },
+    kode_import:{
+        type: String
+    },
+    puskesmas:{
+        type: String,
+        default: "-"
     }
 });
 
