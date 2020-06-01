@@ -4,7 +4,7 @@ Mongoose.Promise = global.Promise;
 
 var options = {
     "auth": {
-      "authSource": "admin"
+      "authSource": "cov-sampang"
     },
     "user": config.database.username,
     "pass": config.database.password
