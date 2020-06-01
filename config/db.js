@@ -2,7 +2,15 @@ const Mongoose = require('mongoose');
 const config = require('./config');
 Mongoose.Promise = global.Promise;
 
-Mongoose.connect(config.database.url, (err, db) => {
+var options = {
+    "auth": {
+      "authSource": "admin"
+    },
+    "user": config.database.username,
+    "pass": config.database.password
+  };
+
+Mongoose.connect(config.database.url,options, (err, db) => {
     if (err) {
         console.log('err', err);
     }

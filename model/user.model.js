@@ -112,7 +112,7 @@ User.statics = {
                 delete query.sort;
                 this.find(query, callback).sort(sort).skip(skip).limit(limit);
             } else {
-                this.find(query, callback).skip(skip).limit(limit);     
+                this.find(query, callback).sort({date_add: -1}).skip(skip).limit(limit);     
             }
         } else {
             if(query.sort){
@@ -120,7 +120,7 @@ User.statics = {
                 delete query.sort;
                 this.find(query, callback).sort(sort);
             } else {
-                this.find(query, callback);     
+                this.find(query, callback).sort({date_add: -1});     
             }
         }
     },

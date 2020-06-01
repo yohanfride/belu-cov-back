@@ -7,8 +7,11 @@ module.exports = {
         host: '127.0.0.1',
         port: 27017,
         db: 'smap',
-        //url: 'mongodb:/127.0.0.1:27017/semar'
-        url:'mongodb://localhost/cov-sampang'
+        //url:'mongodb://localhost/cov-sampang',
+        //url:'mongodb://cov19admin:cov19AdminSampang@103.146.132.203:27017/admin',
+        url:'mongodb://103.146.132.203:27017/cov-sampang',
+        username:'cov19admin',
+        password:'cov19AdminSampang'
     },
     token:{
         secret:'47287e41e0cb0d376e5b5b392581acaf66b8f7aa82dd513137d2e15b856b82cfbe5701ccc6fe275ac24c53a157ae6b331a8dde34198c76c50d4c40d65b99e91f'
