@@ -6,6 +6,7 @@ const QRCode = require('../model/qrcode.model').QRCode;
 const Log = require('../model/log.model').Log;
 const async = require('async');
 const moment = require('moment-timezone');
+const daily = require('./daily');
 
 
 /*
@@ -53,6 +54,8 @@ exports.save = function(req,res){
 			if(!input.qrcode ){
 				QRCode.updateById({qrcode:input.qrcode},{active:1}, function(err, result){});	
 			}
+			///Code Untuk Update Rekap
+			daily.new();
 			console.log('user: add succ:');
 			respon.is_success = true;
 			respon.description = 'success';
@@ -215,6 +218,7 @@ exports.edit_user = function(req,res){
 			if(qrcode ){
 				QRCode.updateById({qrcode:qrcode},{active:1}, function(err, result){});	
 			}
+			daily.new();
 			console.log('user: edit succ:');
 			respon.is_success = true;
 			respon.description = 'success';
@@ -260,11 +264,11 @@ exports.edit_user_scan = function(req,res){
 				} else {
 					console.log('user: edit scan succ:');
 					query.iduser = id;
-
 					Log.create(query, function(err, result){console.log(err); console.log(result);console.log("------------------")});
 					if(qrcode ){
 						QRCode.updateById({qrcode:qrcode},{active:1}, function(err, result){});	
 					}
+					daily.new();
 					respon.is_success = true;
 					respon.description = 'success';
 					respon.data = 'success';
@@ -293,6 +297,7 @@ exports.change_status = function(req,res){
 			respon.description = 'Failed';
 			respon.data = err;
 		} else {
+			daily.new();
 			console.log('user: change_status succ:');
 			respon.is_success = true;
 			respon.description = 'success';
@@ -323,6 +328,7 @@ exports.delete_user = function(req,res){
 				response.data = err;		
 			} else {
 				console.log('user: delete succ:');
+				daily.new();
 				response.is_success = true;
 				response.description = 'success';
 				response.data = 'success';		
