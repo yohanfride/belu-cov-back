@@ -22,6 +22,10 @@ var User = new Schema({
         type: String,
         default: "-"
     },
+    konfirmasi_gejala:{
+        type: String,
+        default: "-"
+    },
     nama: String,
     tgl_lahir: {
         type: Date

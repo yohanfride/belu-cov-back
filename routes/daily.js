@@ -186,10 +186,17 @@ exports.get_recap_today = function(req, res){
       		var key_status = covid_status[index];
       		var key_item = key+"-"+key_status;
       		key_item = key_item.replace(" ","-").toLowerCase();
-      		facet[key_item] = [
-	      		{"$match":{"level":key, "level_status":key_status,"status_pantau":1}},
-		    	{"$count":key_item}
-	      	];
+      		if(key_item == 'dengan-gejala' || key_item == 'tanpa-gejala'){
+      			facet[key_item] = [
+		      		{"$match":{"level":key, "konfirmasi_gejala":key_status,"status_pantau":1}},
+			    	{"$count":key_item}
+		      	];
+      		} else {
+      			facet[key_item] = [
+		      		{"$match":{"level":key, "level_status":key_status,"status_pantau":1}},
+			    	{"$count":key_item}
+		      	];	
+      		}      		
 	      	project[key_item] = { "$arrayElemAt":["$"+key_item+"."+key_item,0] };
 	      	key_status = key_status.replace(" ","-").toLowerCase();
 	      	listitem[key][key_status] = key_item;
@@ -220,10 +227,17 @@ exports.get_recap_today = function(req, res){
 	      		var key_status3 = covid_status[key2];
 	      		var key_item3 = key_item2+"-"+key_status3;
 	      		key_item3 = key_item3.replace(" ","-").toLowerCase();
-	      		facet[key_item3] = [
-		      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status,"status_pantau":1}},
-			    	{"$count":key_item3}
-		      	];
+	      		if(key_item3 == 'dengan-gejala' || key_item3 == 'tanpa-gejala'){
+	      			facet[key_item3] = [
+			      		{"$match":{"level":key, "konfirmasi_gejala":key_status3, "kecamatan":key_status,"status_pantau":1}},
+				    	{"$count":key_item3}
+			      	];	
+	      		} else {
+	      			facet[key_item3] = [
+			      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status,"status_pantau":1}},
+				    	{"$count":key_item3}
+			      	];
+	      		}
 		      	project[key_item3] = { "$arrayElemAt":["$"+key_item3+"."+key_item3,0] };
 		      	key_status3 = key_status3.replace(" ","-").toLowerCase();
 		      	listitem['kecamatan'][key_status][key+'-'+key_status3] = key_item3;
@@ -306,10 +320,17 @@ exports.new = function(){
       		var key_status = covid_status[index];
       		var key_item = key+"-"+key_status;
       		key_item = key_item.replace(" ","-").toLowerCase();
-      		facet[key_item] = [
-	      		{"$match":{"level":key, "level_status":key_status,"status_pantau":1}},
-		    	{"$count":key_item}
-	      	];
+      		if(key_item == 'dengan-gejala' || key_item == 'tanpa-gejala'){
+      			facet[key_item] = [
+		      		{"$match":{"level":key, "konfirmasi_gejala":key_status,"status_pantau":1}},
+			    	{"$count":key_item}
+		      	];
+      		} else {
+      			facet[key_item] = [
+		      		{"$match":{"level":key, "level_status":key_status,"status_pantau":1}},
+			    	{"$count":key_item}
+		      	];	
+      		}
 	      	project[key_item] = { "$arrayElemAt":["$"+key_item+"."+key_item,0] };
 	      	key_status = key_status.replace(" ","-").toLowerCase();
 	      	listitem[key][key_status] = key_item;
@@ -340,10 +361,17 @@ exports.new = function(){
 	      		var key_status3 = covid_status[key2];
 	      		var key_item3 = key_item2+"-"+key_status3;
 	      		key_item3 = key_item3.replace(" ","-").toLowerCase();
-	      		facet[key_item3] = [
-		      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status,"status_pantau":1}},
-			    	{"$count":key_item3}
-		      	];
+	      		if(key_item3 == 'dengan-gejala' || key_item3 == 'tanpa-gejala'){
+	      			facet[key_item3] = [
+			      		{"$match":{"level":key, "konfirmasi_gejala":key_status3, "kecamatan":key_status,"status_pantau":1}},
+				    	{"$count":key_item3}
+			      	];	
+	      		} else {
+	      			facet[key_item3] = [
+			      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status,"status_pantau":1}},
+				    	{"$count":key_item3}
+			      	];
+	      		}
 		      	project[key_item3] = { "$arrayElemAt":["$"+key_item3+"."+key_item3,0] };
 		      	key_status3 = key_status3.replace(" ","-").toLowerCase();
 		      	listitem['kecamatan'][key_status][key+'-'+key_status3] = key_item3;
@@ -457,10 +485,17 @@ exports.manual_insert = function(req, res){
       		var key_status = covid_status[index];
       		var key_item = key+"-"+key_status;
       		key_item = key_item.replace(" ","-").toLowerCase();
-      		facet[key_item] = [
-	      		{"$match":{"level":key, "level_status":key_status}},
-		    	{"$count":key_item}
-	      	];
+      		if(key_item == 'dengan-gejala' || key_item == 'tanpa-gejala'){
+      			facet[key_item] = [
+		      		{"$match":{"level":key, "konfirmasi_gejala":key_status,"status_pantau":1}},
+			    	{"$count":key_item}
+		      	];
+      		} else {
+      			facet[key_item] = [
+		      		{"$match":{"level":key, "level_status":key_status,"status_pantau":1}},
+			    	{"$count":key_item}
+		      	];	
+      		}
 	      	project[key_item] = { "$arrayElemAt":["$"+key_item+"."+key_item,0] };
 	      	key_status = key_status.replace(" ","-").toLowerCase();
 	      	listitem[key][key_status] = key_item;
@@ -491,10 +526,17 @@ exports.manual_insert = function(req, res){
 	      		var key_status3 = covid_status[key2];
 	      		var key_item3 = key_item2+"-"+key_status3;
 	      		key_item3 = key_item3.replace(" ","-").toLowerCase();
-	      		facet[key_item3] = [
-		      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status}},
-			    	{"$count":key_item3}
-		      	];
+	      		if(key_item3 == 'dengan-gejala' || key_item3 == 'tanpa-gejala'){
+	      			facet[key_item3] = [
+			      		{"$match":{"level":key, "konfirmasi_gejala":key_status3, "kecamatan":key_status,"status_pantau":1}},
+				    	{"$count":key_item3}
+			      	];	
+	      		} else {
+	      			facet[key_item3] = [
+			      		{"$match":{"level":key, "level_status":key_status3, "kecamatan":key_status,"status_pantau":1}},
+				    	{"$count":key_item3}
+			      	];
+	      		}
 		      	project[key_item3] = { "$arrayElemAt":["$"+key_item3+"."+key_item3,0] };
 		      	key_status3 = key_status3.replace(" ","-").toLowerCase();
 		      	listitem['kecamatan'][key_status][key+'-'+key_status3] = key_item3;
