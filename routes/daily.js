@@ -186,11 +186,12 @@ exports.get_recap_today = function(req, res){
       		var key_status = covid_status[index];
       		var key_item = key+"-"+key_status;
       		key_item = key_item.replace(" ","-").toLowerCase();
-      		if(key_item == 'dengan-gejala' || key_item == 'tanpa-gejala'){
+      		if(key_item == 'konfirmasi-dengan-gejala' || key_item == 'konfirmasi-tanpa-gejala'){
       			facet[key_item] = [
 		      		{"$match":{"level":key, "konfirmasi_gejala":key_status,"status_pantau":1}},
 			    	{"$count":key_item}
 		      	];
+		      	console.log(facet[key_item]);
       		} else {
       			facet[key_item] = [
 		      		{"$match":{"level":key, "level_status":key_status,"status_pantau":1}},
@@ -227,7 +228,7 @@ exports.get_recap_today = function(req, res){
 	      		var key_status3 = covid_status[key2];
 	      		var key_item3 = key_item2+"-"+key_status3;
 	      		key_item3 = key_item3.replace(" ","-").toLowerCase();
-	      		if(key_item3 == 'dengan-gejala' || key_item3 == 'tanpa-gejala'){
+	      		if(key_item3 == 'konfirmasi-dengan-gejala' || key_item3 == 'konfirmasi-tanpa-gejala'){
 	      			facet[key_item3] = [
 			      		{"$match":{"level":key, "konfirmasi_gejala":key_status3, "kecamatan":key_status,"status_pantau":1}},
 				    	{"$count":key_item3}
@@ -320,7 +321,7 @@ exports.new = function(){
       		var key_status = covid_status[index];
       		var key_item = key+"-"+key_status;
       		key_item = key_item.replace(" ","-").toLowerCase();
-      		if(key_item == 'dengan-gejala' || key_item == 'tanpa-gejala'){
+      		if(key_item == 'konfirmasi-dengan-gejala' || key_item == 'konfirmasi-tanpa-gejala'){
       			facet[key_item] = [
 		      		{"$match":{"level":key, "konfirmasi_gejala":key_status,"status_pantau":1}},
 			    	{"$count":key_item}
@@ -361,7 +362,7 @@ exports.new = function(){
 	      		var key_status3 = covid_status[key2];
 	      		var key_item3 = key_item2+"-"+key_status3;
 	      		key_item3 = key_item3.replace(" ","-").toLowerCase();
-	      		if(key_item3 == 'dengan-gejala' || key_item3 == 'tanpa-gejala'){
+	      		if(key_item3 == 'konfirmasi-dengan-gejala' || key_item3 == 'konfirmasi-tanpa-gejala'){
 	      			facet[key_item3] = [
 			      		{"$match":{"level":key, "konfirmasi_gejala":key_status3, "kecamatan":key_status,"status_pantau":1}},
 				    	{"$count":key_item3}
@@ -485,7 +486,7 @@ exports.manual_insert = function(req, res){
       		var key_status = covid_status[index];
       		var key_item = key+"-"+key_status;
       		key_item = key_item.replace(" ","-").toLowerCase();
-      		if(key_item == 'dengan-gejala' || key_item == 'tanpa-gejala'){
+      		if(key_item == 'konfirmasi-dengan-gejala' || key_item == 'konfirmasi-tanpa-gejala'){
       			facet[key_item] = [
 		      		{"$match":{"level":key, "konfirmasi_gejala":key_status,"status_pantau":1}},
 			    	{"$count":key_item}
@@ -526,7 +527,7 @@ exports.manual_insert = function(req, res){
 	      		var key_status3 = covid_status[key2];
 	      		var key_item3 = key_item2+"-"+key_status3;
 	      		key_item3 = key_item3.replace(" ","-").toLowerCase();
-	      		if(key_item3 == 'dengan-gejala' || key_item3 == 'tanpa-gejala'){
+	      		if(key_item3 == 'konfirmasi-dengan-gejala' || key_item3 == 'konfirmasi-tanpa-gejala'){
 	      			facet[key_item3] = [
 			      		{"$match":{"level":key, "konfirmasi_gejala":key_status3, "kecamatan":key_status,"status_pantau":1}},
 				    	{"$count":key_item3}

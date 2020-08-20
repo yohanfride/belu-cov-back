@@ -1,6 +1,6 @@
 {
 	"konfirmasi": ["Dirawat", "Pengawasan" ,"Sembuh", "Meninggal","Dengan Gejala", "Tanpa Gejala"],
-	"suspek": ["Isolasi,", "Selesai Isolasi", "Meninggal"],
-	"probable": ["Isolasi,", "Selesai Isolasi", "Meninggal"],
+	"suspek": ["Isolasi", "Selesai Isolasi", "Meninggal"],
+	"probable": ["Isolasi", "Selesai Isolasi", "Meninggal"],
 	"kontak_erat": ["Dipantau", "Selesai dipantau"]
 }
