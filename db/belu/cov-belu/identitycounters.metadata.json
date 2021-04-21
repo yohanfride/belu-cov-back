@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cov-belu.identitycounters"}],"uuid":"12ad28f0016a431b9f29b777d779961e"}

@@ -7,7 +7,7 @@ module.exports = {
         host: '127.0.0.1',
         port: 27017,
         db: 'smap',
-        url:'mongodb://localhost/cov-sampang',
+        url:'mongodb://localhost/cov-belu',
         //url:'mongodb://cov19admin:cov19AdminSampang@103.146.132.203:27017/admin',
         //url:'mongodb://103.146.132.203:27017/cov-sampang',
         username:'covid19',

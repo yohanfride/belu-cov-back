@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"cov-belu.dailies"},{"v":{"$numberInt":"2"},"unique":true,"key":{"date_only":{"$numberInt":"1"}},"name":"date_only_1","ns":"cov-belu.dailies","background":true}],"uuid":"bd4c483cee2d43058601abdd16d9b524"}
