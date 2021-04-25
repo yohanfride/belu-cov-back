@@ -45,6 +45,10 @@ var User = new Schema({
         sparse: true,
         default: "-"
     },
+    pekerjaan: {
+        type: String,
+        default: "-"
+    },
     riwayat_perjalanan:{
         type: String,
         default: "-"
@@ -82,6 +86,12 @@ var User = new Schema({
     puskesmas:{
         type: String,
         default: "-"
+    },
+    tgl_pemantauan_start: {
+        type: Date
+    },
+    tgl_pemantauan_end: {
+        type: Date
     }
 });
 

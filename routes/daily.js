@@ -228,7 +228,7 @@ exports.get_recap_today = function(req, res){
 	      		var key_status3 = covid_status[key2];
 	      		var key_item3 = key_item2+"-"+key_status3;
 	      		key_item3 = key_item3.replace(" ","-").toLowerCase();
-	      		if(key_item3 == 'konfirmasi-dengan-gejala' || key_item3 == 'konfirmasi-tanpa-gejala'){
+	      		if(key_item3 == 'terkonfirmasi-dengan-gejala' || key_item3 == 'terkonfirmasi-tanpa-gejala'){
 	      			facet[key_item3] = [
 			      		{"$match":{"level":key, "konfirmasi_gejala":key_status3, "kecamatan":key_status,"status_pantau":1}},
 				    	{"$count":key_item3}

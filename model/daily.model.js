@@ -17,10 +17,11 @@ var Daily = new Schema({
         unique: true,
         required: true
     },
-    konfirmasi: Schema.Types.Mixed,
+    terkonfirmasi: Schema.Types.Mixed,
     suspek: Schema.Types.Mixed,
     probable: Schema.Types.Mixed,
     kontak_erat: Schema.Types.Mixed,
+    pelaku_perjalanan: Schema.Types.Mixed,
     kecamatan: Schema.Types.Mixed
 });
 
