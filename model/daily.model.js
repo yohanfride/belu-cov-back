@@ -22,6 +22,8 @@ var Daily = new Schema({
     probable: Schema.Types.Mixed,
     kontak_erat: Schema.Types.Mixed,
     pelaku_perjalanan: Schema.Types.Mixed,
+    vaksin: Schema.Types.Mixed,
+    tes: Schema.Types.Mixed,
     kecamatan: Schema.Types.Mixed
 });
 

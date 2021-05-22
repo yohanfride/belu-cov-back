@@ -21,6 +21,7 @@ var qrcode = require('./routes/qrcode');
 var logs = require('./routes/log');
 var faskes = require('./routes/faskes');
 var daily = require('./routes/daily');
+var vaksin = require('./routes/vaksin');
 
 
 var infografis = require('./routes/infografis');
@@ -138,6 +139,8 @@ app.post('/daily/search/',daily.search);
 app.post('/daily/count/',daily.search_count);
 app.post('/daily/today/',daily.get_recap_today);
 app.post('/daily/manual/',daily.manual_insert);
+app.post('/daily/manual_vaksin/',daily.manual_insert_vaksin);
+app.post('/daily/hitungulang/',daily.hitungulang);
 
 
 ///Rumah Isolasi
@@ -178,10 +181,21 @@ app.get('/homeslide/delete/:id',homeslide.delete_homeslide);
 app.post('/homeslide/search/',homeslide.search);
 app.post('/homeslide/count/',homeslide.search_count);
 
+///Vaksin
+app.get('/vaksin/',vaksin.vaksin);
+app.post('/vaksin/',vaksin.save);
+app.get('/vaksin/detail/:id',vaksin.vaksin_detail);
+app.post('/vaksin/edit/:id',vaksin.edit_vaksin);
+app.get('/vaksin/delete/:id',vaksin.delete_vaksin);
+app.post('/vaksin/search/',vaksin.search);
+app.post('/vaksin/search_all/',vaksin.search_all);
+app.post('/vaksin/count/',vaksin.search_count);
+app.post('/vaksin/radius/',vaksin.searchRadius);
+
 //app.use(app.router);
 http.createServer(app).listen(app.get('port'), function(){
   	console.log('Express server listening on port ' + app.get('port'));
-  	cron.scheduleJob('00 13 * * 0-7', function(){	
+  	cron.scheduleJob('45 07 * * 0-7', function(){	
 	//cron.scheduleJob('57 10 * * 1-7', function(){	
 		console.log(new Date(), "Cron Job - Auto Recap !.");					
 		daily.new();

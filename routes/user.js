@@ -41,6 +41,11 @@ exports.save = function(req,res){
     if( input.loc_long && input.loc_lat ){
     	input.lokasi = { type: 'Point', coordinates: [input.loc_long, input.loc_lat] };   	
     }
+    if(!input.date_add){
+    	input.date_add = new Date();
+    	input.date_updated = new Date();
+    }
+
     var query = input;
 	User.create(query, function(err, result){
 		var respon = Config.base_response;		
@@ -55,7 +60,11 @@ exports.save = function(req,res){
 				QRCode.updateById({qrcode:input.qrcode},{active:1}, function(err, result){});	
 			}
 			///Code Untuk Update Rekap
-			daily.new();
+			if(!input.kode_import){
+				daily.new();
+			}else {
+				daily.import_new(input.date_add);
+			}
 			console.log('user: add succ:');
 			respon.is_success = true;
 			respon.description = 'success';
@@ -207,6 +216,9 @@ exports.edit_user = function(req,res){
 	if( query.loc_long && query.loc_lat ){
     	query.lokasi = { type: 'Point', coordinates: [query.loc_long, query.loc_lat] };   	
     }	
+  if(!query.date_updated ){
+    	query.date_updated = new Date();   	
+    }
 	User.updateById({_id:id},query, function(err, result){
 		var respon = Config.base_response;
 		if(err){
