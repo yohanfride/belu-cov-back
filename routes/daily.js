@@ -4,6 +4,7 @@ const Common = require('../config/common');
 const Daily = require('../model/daily.model').Daily;
 const User = require('../model/user.model').User;
 const Vaksin = require('../model/vaksin.model').Vaksin;
+const Tes = require('../model/tes.model').Tes;
 const async = require('async');
 const moment = require('moment-timezone');
 const qr = require('qr-image');
@@ -117,6 +118,11 @@ exports.search = function(req, res){
 		input.date_add = { $gte: new Date(input.str_date+"T00:00:00.000Z"), $lte:  new Date(input.end_date+"T23:59:59.000Z") };
 		delete input.str_date;
 		delete input.end_date;
+	}
+	if(input.sort == 'date_add,DESC'){
+		input.sort = {date_add:-1};
+	} else if(input.sort == 'date_add,ASC'){
+		input.sort = {date_add:1};
 	}
 	var query = input;
 	console.log(query);
@@ -306,7 +312,6 @@ exports.get_recap_today = function(req, res){
 //Daily Get by Dailyname
 exports.new = function(){
 	var response = Config.base_response;
-	
 	var facet = {}; 
 	var project = {};
 	var listitem = {};
@@ -393,8 +398,9 @@ exports.new = function(){
 			response.description = 'Failed';
 			response.data = err;			
 		} else {
-			var datenow = new Date(); 
-			var datenow_string = datenow.getFullYear()+"-"+(datenow.getMonth() + 1)+"-"+datenow.getDate(); 
+			// var datenow = new Date(); 
+			// var datenow_string = datenow.getFullYear()+"-"+(datenow.getMonth() + 1)+"-"+datenow.getDate(); 
+			var datenow_string = moment.utc().local().format('YYYY-M-D');
 			var data = result[0];
 			for(var key in listitem){
 				if (typeof listitem[key] === 'string') {
@@ -429,6 +435,7 @@ exports.new = function(){
 			query = listitem;
 			Daily.get({ date_only:listitem.date_only },function(err, result){
 				if(!result){
+					query.date_add = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss')+".000Z"; //new Date();
 					Daily.create(query, function(err, result){
 						var respon = Config.base_response;		
 						if(err){
@@ -443,6 +450,7 @@ exports.new = function(){
 							respon.data = 'success';			
 						}
 						exports.rekap_vaksin(datenow_string);
+						exports.rekap_tes(datenow_string);
 						//res.json(respon);		
 					});		
 				} else {
@@ -461,6 +469,8 @@ exports.new = function(){
 							respon.data = 'success';
 						}
 						exports.rekap_vaksin(datenow_string);
+						exports.rekap_tes(datenow_string);
+						
 						//res.json(respon);		
 					});		
 				}			
@@ -901,6 +911,138 @@ exports.rekap_vaksin = function(date_input){
 };
 
 
+//Daily Get Vaksin
+exports.rekap_tes = function(date_input){
+	var response = Config.base_response;
+	var kelompok = conv['tes'];
+	var facet = {}; 
+	var project = {};
+	var listitem = {};
+	var key = 'tes';
+  	facet[key] = [
+  		{"$match":{}},
+    	{"$count":key}
+  	];
+  	project[key] = { "$arrayElemAt":["$"+key+"."+key,0] };
+  	listitem[key] = {};
+  	listitem[key]['total'] = key;
+  	for (var index in kelompok) {
+  		var key_status = kelompok[index];
+  		var key_item = key+"-"+key_status;
+  		key_item = key_item.replace(" ","-").toLowerCase();
+  		
+  		facet[key_item] = [
+      		{"$match":{"jenis":key_status}},
+	    	{"$count":key_item}
+      	];	
+      	project[key_item] = { "$arrayElemAt":["$"+key_item+"."+key_item,0] };
+      	key_status = key_status.replace(" ","-").toLowerCase();
+      	listitem[key][key_status] = key_item;
+  	}
+    var list_kecamatan = kecamatan["Kecamatan"];
+    listitem['kecamatan'] = {};
+    for (var index in list_kecamatan) {
+		var key_status = list_kecamatan[index];
+		key_item = "kecamatan-"+key_status.replace(" ","-").toLowerCase();
+      	listitem['kecamatan'][key_status] = {};
+      	
+  		var key_item2 = key_item+"-"+key;
+  		facet[key_item2] = [
+      		{"$match":{"kecamatan":key_status}},
+	    	{"$count":key_item2}
+      	];
+      	project[key_item2] = { "$arrayElemAt":["$"+key_item2+"."+key_item2,0] };
+  		listitem['kecamatan'][key_status][key] = key_item2;
+		var covid_status = covid[key];
+  		for (var key2 in kelompok) {
+      		var key_status3 = kelompok[key2];
+      		var key_item3 = key_item2+"-"+key_status3;
+      		key_item3 = key_item3.replace(" ","-").toLowerCase();
+  			facet[key_item3] = [
+	      		{"$match":{"jenis":key_status3, "kecamatan":key_status}},
+		    	{"$count":key_item3}
+	      	];
+	      	project[key_item3] = { "$arrayElemAt":["$"+key_item3+"."+key_item3,0] };
+	      	key_status3 = key_status3.replace(" ","-").toLowerCase();
+	      	listitem['kecamatan'][key_status][key+'-'+key_status3] = key_item3;
+      	}
+	}
+    var query = [
+    	{"$facet":facet},
+    	{"$project":project}
+    ];
+    var query2 = query;
+	Tes.multiCount(query,function(err, result){
+		if(!result){
+			console.log('daily: detail err:', err);
+			response.is_success = false;
+			response.description = 'Failed';
+			response.data = err;			
+		} else {
+			var datenow = new Date(); 
+			if(!date_input){
+				var datenow_string = datenow.getFullYear()+"-"+(datenow.getMonth() + 1)+"-"+datenow.getDate(); 	
+			} else {
+				var datenow_string = date_input;
+			}
+			
+			var data = result[0];
+			for(var key in listitem){
+				if (typeof listitem[key] === 'string') {
+					var index = listitem[key];
+					if( data.hasOwnProperty(index) )
+						listitem[key] = data[index];
+					else 
+						listitem[key] = 0;
+				} else {
+					for(var key2 in listitem[key]){
+						if (typeof listitem[key][key2] === 'string') {
+							var index = listitem[key][key2];
+							if( data.hasOwnProperty(index) )
+								listitem[key][key2] = data[index];
+							else 
+								listitem[key][key2] = 0;
+						} else {
+							for(var key3 in listitem[key][key2]){
+								if (typeof listitem[key][key2][key3] === 'string') {
+									var index = listitem[key][key2][key3];
+									if( data.hasOwnProperty(index) )
+										listitem[key][key2][key3] = data[index];
+									else 
+										listitem[key][key2][key3] = 0;
+								} 
+							}	
+						}
+					}
+				}
+			}
+			listitem['date_only'] = datenow_string;
+			listitem['tes']['kecamatan'] = listitem['kecamatan'];
+			delete listitem['kecamatan'];
+			query = listitem;
+			Daily.get({ date_only:listitem.date_only },function(err, result){
+				var data = result;
+				Daily.updateById({_id:data._id},query, function(err, result){
+					var respon = Config.base_response;
+					if(err){
+						console.log('daily: tes edit err:', err);
+						respon.is_success = false;
+						respon.description = 'Failed';
+						respon.data = err;
+					} else {
+						console.log('daily: tes edit succ:');
+						respon.is_success = true;
+						respon.description = 'success';
+						respon.data = 'success';
+						// respon.data = query2;
+					}
+					// res.json(respon);		
+				});		
+			});
+		}
+	});	
+};
+
 //Daily Get by Dailyname
 exports.import_new = function(date_input){
 	var response = Config.base_response;
@@ -1073,10 +1215,11 @@ exports.import_new = function(date_input){
 					}
 				}
 			}
+			
 			listitem['date_only'] = datenow_string;
 			query = listitem;
+			query['date_only'] = query['date_only'].replace(/(^|-)0+/g, "$1");
 			Daily.get({ date_only:query['date_only'] },function(err, result){
-				query['date_only'] = query['date_only'].replace(/(^|-)0+/g, "$1");
 				console.log(query['date_only']);
 				// console.log(result);
 				if(!result){
@@ -1100,7 +1243,8 @@ exports.import_new = function(date_input){
 										respon.description = 'success';
 										respon.data = 'success';
 									}
-									//exports.rekap_vaksin(datenow_string);
+									exports.rekap_vaksin(datenow_string);
+									exports.rekap_tes(datenow_string);
 									//res.json(respon);		
 								});		
 							});
@@ -1110,7 +1254,8 @@ exports.import_new = function(date_input){
 							respon.description = 'success';
 							respon.data = 'success';			
 						}
-						//exports.rekap_vaksin(datenow_string);
+						// exports.rekap_vaksin(datenow_string);
+						// exports.rekap_tes(datenow_string);
 						//res.json(respon);		
 					});		
 				} else {
@@ -1128,7 +1273,8 @@ exports.import_new = function(date_input){
 							respon.description = 'success';
 							respon.data = 'success';
 						}
-						//exports.rekap_vaksin(datenow_string);
+						// exports.rekap_vaksin(datenow_string);
+						// exports.rekap_tes(datenow_string);
 						//res.json(respon);		
 					});		
 				}			
@@ -1148,8 +1294,41 @@ exports.hitungulang = function(req, res){
 		console.log(result);
 
 		result.forEach(data => {
-			console.log(data.date_only);
-			exports.import_new(data.date_only);
+			var today = new Date(data.date_only);
+			var dd = today.getDate();
+			var mm = today.getMonth()+1; 
+			var yyyy = today.getFullYear();
+			if(dd<10) 
+				dd='0'+dd;
+			if(mm<10) 
+			    mm='0'+mm;
+			var newdate = yyyy+"-"+mm+"-"+dd;
+			// console.log(data.date_only+" -> "+newdate)
+			exports.import_new(newdate);
+			// Daily.get({ date_only:data.date_only },function(err, result){
+			// 	console.log( moment.utc().local().format('YYYY-M-D') ); //
+			// 	var data = result;
+			// 	var query = {
+			// 		date_add : newdate+"T09:00:00.000Z"
+			// 	};
+			// 	console.log(query);
+			// 	Daily.updateById({_id:data._id},query, function(err, result){
+			// 		var respon = Config.base_response;
+			// 		if(err){
+			// 			console.log('daily: edit err:', err);
+			// 			respon.is_success = false;
+			// 			respon.description = 'Failed';
+			// 			respon.data = err;
+			// 		} else {
+			// 			console.log('daily: edit succ:');
+			// 			respon.is_success = true;
+			// 			respon.description = 'success';
+			// 			respon.data = 'success';
+			// 			// respon.data = query2;
+			// 		}
+			// 		// res.json(respon);		
+			// 	});		
+			// });
 		});
 
 		if(!result){

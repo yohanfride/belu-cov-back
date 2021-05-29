@@ -40,6 +40,10 @@ exports.save = function(req,res){
     if( input.loc_long && input.loc_lat ){
     	input.lokasi = { type: 'Point', coordinates: [input.loc_long, input.loc_lat] };   	
     }
+    if(!input.date_add){
+    	input.date_add = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss')+".000Z"; //new Date();
+    	input.date_updated = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss')+".000Z"; //new Date();
+    }
     var query = input;
 	Vaksin.create(query, function(err, result){
 		var respon = Config.base_response;		
@@ -201,7 +205,7 @@ exports.edit_vaksin = function(req,res){
     	query.lokasi = { type: 'Point', coordinates: [query.loc_long, query.loc_lat] };   	
     }	
   if(!query.date_updated ){
-    	query.date_updated = new Date();   	
+    	query.date_updated = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss')+".000Z"; //new Date();   	
     }
 	Vaksin.updateById({_id:id},query, function(err, result){
 		var respon = Config.base_response;

@@ -5,6 +5,7 @@
 const Config = require('./config/config');
 process.env.PORT = Config.server.port;
 process.env.ACCESS_TOKEN_SECRET = Config.token.secret;
+process.env.TZ = "Asia/Hong_Kong";
 var express = require('express');
 var routes = require('./routes');
 var http = require('http');
@@ -22,6 +23,7 @@ var logs = require('./routes/log');
 var faskes = require('./routes/faskes');
 var daily = require('./routes/daily');
 var vaksin = require('./routes/vaksin');
+var tes = require('./routes/tes');
 
 
 var infografis = require('./routes/infografis');
@@ -72,6 +74,7 @@ app.get('/user/status/:id/:status',user.change_status);
 app.post('/user/search_all/',user.search_all);
 app.post('/user/count/',user.search_count);
 app.post('/user/radius/',user.searchRadius);
+app.post('/user/cekdata/',user.cekdata);
 
 ///admin
 app.get('/admin/',admin.admin);
@@ -191,6 +194,19 @@ app.post('/vaksin/search/',vaksin.search);
 app.post('/vaksin/search_all/',vaksin.search_all);
 app.post('/vaksin/count/',vaksin.search_count);
 app.post('/vaksin/radius/',vaksin.searchRadius);
+
+
+
+///Tes
+app.get('/tes/',tes.tes);
+app.post('/tes/',tes.save);
+app.get('/tes/detail/:id',tes.tes_detail);
+app.post('/tes/edit/:id',tes.edit_tes);
+app.get('/tes/delete/:id',tes.delete_tes);
+app.post('/tes/search/',tes.search);
+app.post('/tes/search_all/',tes.search_all);
+app.post('/tes/count/',tes.search_count);
+app.post('/tes/radius/',tes.searchRadius);
 
 //app.use(app.router);
 http.createServer(app).listen(app.get('port'), function(){

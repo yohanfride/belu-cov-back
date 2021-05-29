@@ -43,6 +43,10 @@ var Vaksin = new Schema({
         type: Date,
         default: new Date()
     },
+    lokasi: {
+       type: { type: String },
+       coordinates: [Number]
+    },
     faskes_vaksinasi:{
         type: String,
         default: "-"
@@ -52,6 +56,9 @@ var Vaksin = new Schema({
     },
     tgl_vaksinasi2: {
         type: Date
+    },
+    kode_import:{
+        type: String
     }
 });
 

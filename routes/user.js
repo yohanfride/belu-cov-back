@@ -42,8 +42,8 @@ exports.save = function(req,res){
     	input.lokasi = { type: 'Point', coordinates: [input.loc_long, input.loc_lat] };   	
     }
     if(!input.date_add){
-    	input.date_add = new Date();
-    	input.date_updated = new Date();
+    	input.date_add = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss')+".000Z"; //new Date();
+    	input.date_updated = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss')+".000Z"; //new Date();
     }
 
     var query = input;
@@ -216,8 +216,8 @@ exports.edit_user = function(req,res){
 	if( query.loc_long && query.loc_lat ){
     	query.lokasi = { type: 'Point', coordinates: [query.loc_long, query.loc_lat] };   	
     }	
-  if(!query.date_updated ){
-    	query.date_updated = new Date();   	
+  	if(!query.date_updated ){
+    	query.date_updated = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss')+".000Z"; //new Date();   	
     }
 	User.updateById({_id:id},query, function(err, result){
 		var respon = Config.base_response;
@@ -374,3 +374,55 @@ exports.search_all = function(req, res){
 	});	
 };
 
+
+
+///Activation User
+exports.cekdata = function(req, res){
+	console.log('user: user search');
+	var input = JSON.parse(JSON.stringify(req.body));	
+	var response = Config.base_response;
+	
+	var input = {
+		tgl_pemantauan_start : { $exists: false } 
+	};
+
+	var query = input;
+	User.getAll(query,function(err, result){		
+		// console.log(err);
+		// console.log(result);
+		result.forEach(data => {
+			var twoWeeks = 1000 * 60 * 60 * 24 * 14;
+			var twoYears = 1000 * 60 * 60 * 24 * 354;
+			var tgl_str = new Date(data.date_add);
+			if(data.level == "terkonfirmasi")
+				var tgl_end = new Date(tgl_str.getTime() + twoYears); 
+			else
+				var tgl_end = new Date(tgl_str.getTime() + twoWeeks); 
+			console.log(data.level+" -- "+tgl_str+" -- "+tgl_end);
+			query = {
+				tgl_pemantauan_start:tgl_str,
+				tgl_pemantauan_end:tgl_end
+			};
+			User.updateById({_id:data._id},query, function(err, result){
+				if(err){
+					console.log("ERRROR "+data._id);
+				} else {
+					console.log("SUCCESS "+data._id);
+				}
+			});
+			// exports.import_new(data.date_only);
+		});
+		if(!result){
+			// console.log('user: search err:', err);
+			response.is_success = false;
+			response.description = 'Failed';
+			response.data = err;			
+		} else {
+			// console.log('user: search succ:', result);			
+			response.is_success = true;
+			response.description = 'success';
+			response.data = result;			
+		}
+		res.json(response);		
+	});	
+};
